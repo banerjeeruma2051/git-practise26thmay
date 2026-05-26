@@ -13,7 +13,7 @@ practise1 = {
  }
 
   demo3 = {
-    name = "demo3"
+    name = "demo4"
     location = "centralindia"
    managed_by = "loc2"
  }

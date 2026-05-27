@@ -34,6 +34,7 @@ stages:
               backendAzureRmStorageAccountName: '$(stg)'
               backendAzureRmContainerName: '$(container)'
               backendAzureRmKey: '$(pipeline)'
+              backendServiceArm: 'My-Azure-Service-Connection'
           - task: TerraformTask@5
             displayName: tfvalidate
             inputs:

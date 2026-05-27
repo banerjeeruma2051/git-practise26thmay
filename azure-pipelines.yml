@@ -74,5 +74,5 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
-          
+           
           

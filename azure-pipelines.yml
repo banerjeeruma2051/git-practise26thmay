@@ -3,17 +3,76 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- variable
+trigger: none
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+  rg: 'practise1'
+  stg: 'storage_account'
+  container: 'tfstate'
+  pipeline: 'pipeline.terraform.tfstate'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+  - stage: tfvalidate
+    jobs:
+      - job: validate
+        continueOnError: false
+        steps:
+          - task: TerraformInstaller@1
+            displayName: tfinstall
+            inputs:
+              terraformVersion: 'latest'
+          
+          - task: TerraformTask@5
+            displayName: init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendAzureRmResourceGroupName: '$(rg)'
+              backendAzureRmStorageAccountName: '$(stg)'
+              backendAzureRmContainerName: '$(container)'
+              backendAzureRmKey: '$(pipeline)'
+          - task: TerraformTask@5
+            displayName: tfvalidate
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+          - task: TerraformTask@5
+            displayName: tfplan
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+  - stage: tfdeploy
+    condition: succeeded('tfvalidate')
+    dependsOn: tfvalidate
+    jobs:
+      - job: apply
+        steps:
+          - task: TerraformInstaller@1
+            displayName: tfinstall
+            inputs:
+              terraformVersion: 'latest'
+          
+          - task: TerraformTask@5
+            displayName: init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendAzureRmResourceGroupName: '$(rg)'
+              backendAzureRmStorageAccountName: '$(stg)'
+              backendAzureRmContainerName: '$(container)'
+              backendAzureRmKey: '$(pipeline)'
+          - task: TerraformTask@5
+            displayName: plan
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+          - task: TerraformTask@5
+            displayName: apply
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+          
+          

@@ -73,7 +73,8 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         client-id: ${{ secrets.ARM_CLIENT_ID }}
-        tenant-id: ${{ secrets.ARM_CLIENT_SECRET}}
+        tenant-id: ${{ secrets.ARM_TENANT_ID }}
+        subscription-id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init

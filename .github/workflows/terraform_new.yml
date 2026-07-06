@@ -51,8 +51,7 @@ on:
 
 permissions:
   contents: read
-
-jobs:
+  jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
@@ -64,10 +63,9 @@ jobs:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
-    defaults:
+  defaults:
       run:
         shell: bash
-
     steps:
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
